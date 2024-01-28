@@ -1,0 +1,4656 @@
+
+<?php
+session_start();
+
+      date_default_timezone_set('Asia/kolkata');
+
+ class class_mi
+ {
+     private $con;
+
+     function __construct()
+     {
+        $this->con=new mysqli("localhost","root","","dt_dream");
+
+     }
+
+     function create_user_account($full_name,$brith_date,$mob_number,$email_id,$password)
+     {
+         $current_date  = date("Y-m-d");
+         $current_time  = date("H:i:s A");
+
+        if($stmt = $this->con->prepare("INSERT INTO `users`( `full_name`, `brith_date`, `mob_number`, `email`, `password`, `date`, `time`) VALUES (?,?,?,?,?,?,?)"))
+         {
+            $stmt->bind_param("sssssss",$full_name,$brith_date,$mob_number,$email_id,$password,$current_date,$current_time);
+
+            if($stmt->execute())
+            {
+               return true;
+            }
+            else
+            {
+               return false;
+            }
+
+        }
+     }
+
+     function get_all_users_data()
+     {
+
+      $current_date  = date("Y-m-d");
+      $current_time  = date("H:i:s A");
+        if($stmt = $this->con->prepare("SELECT `id`, `full_name`, `brith_date`, `mob_number`, `email`, `password`, `date`, `time` FROM `users` "))
+{
+     $stmt->bind_result($res_id,$res_full_name,$res_brith_date,$res_mob_number,$res_email,$res_password,$res_date,$res_time);
+
+     if($stmt->execute())
+     {
+      $data= array();
+      $counter =0;
+
+      while($stmt->fetch())
+      {
+         echo 878787;
+         $data[$counter]['id'] = $res_id;
+         $data[$counter]['full_name']=$res_full_name;
+         $data[$counter]['brith_date']=$res_brith_date;
+         $data[$counter]['mob_number']=$res_mob_number;
+         $data[$counter]['email']=$res_email;
+         $data[$counter]['password']=$res_password;
+         $data[$counter]['date']=$res_date;
+         $data[$counter]['time']=$res_time;
+
+         $counter++;
+      }
+      if(!empty($data))
+      {
+          return $data;
+      }
+      else
+      {
+         return false;
+      }
+     }
+}
+     }
+
+
+
+
+     function get_category_data()
+     {
+      
+
+        if($stmt = $this->con->prepare("SELECT  `category` FROM `cat`  "))
+{
+   
+     $stmt->bind_result($res_category);
+
+     if($stmt->execute())
+     {
+      $data= array();
+      $counter =0;
+
+      while($stmt->fetch())
+      {
+         
+         $data[$counter]['category'] = $res_category;
+        
+
+         $counter++;
+      }
+      if(!empty($data))
+      {
+          return $data;
+      }
+      else
+      {
+         return false;
+      }
+     }
+}
+     }
+
+
+
+
+     function delete_user_record($del_id)
+     {
+      if($stmt = $this->con->prepare("Delete from `users` where `id`=?"))
+      {
+            $stmt->bind_param("i",$del_id);
+
+            if($stmt->execute())
+            {
+               return true;
+            }
+            else
+            {
+                 return false;
+            }
+      }
+     }
+
+
+     function update_user_acount( $full_name,$brith_date,$mob_number,$email_id,$password,$res_edit_id)
+     {
+     
+         $current_date = date("Y-m-d");
+         $current_time= date("H:i:s A");
+     
+     
+         if($stmt=$this->con->prepare("UPDATE `users` SET `full_name`=?,`brith_date`=?,`mob_number`=?,`email`=?,`password`=?,`date`=?,`time`=? WHERE  `id`=?"))
+         {
+               $stmt->bind_param("sssssssi",$full_name,$brith_date,$mob_number,$email_id,$password,$current_date, $current_time,$res_edit_id);
+     
+               if($stmt->execute())
+               {
+                 return true;
+               }
+               else
+               {
+                  return false;
+               }
+         }
+     }
+     
+
+     function get_user_data_from_id( $res_edit_id)
+     {
+     if($stmt = $this->con->prepare("SELECT `id`, `full_name`, `brith_date`, `mob_number`, `email`, `password`, `date`, `time` FROM `users` where `id`=? "))
+     {
+         $stmt->bind_param("i",$res_edit_id);
+
+          $stmt->bind_result($res_id,$res_full_name,$res_brith_date,$res_mob_number,$res_email,$res_password,$res_date,$res_time);
+     
+          if($stmt->execute())
+          {
+           $data= array();
+     
+           if($stmt->fetch())
+           {
+              $data['id'] = $res_id;
+              $data['full_name']=$res_full_name;
+              $data['brith_date']=$res_brith_date;
+              $data['mob_number']=$res_mob_number;
+              $data['email']=$res_email;
+              $data['password']=$res_password;
+              $data['date']=$res_date;
+              $data['time']=$res_time;
+     
+            
+           }
+           if(!empty($data))
+           {
+               return $data;
+           }
+           else
+           {
+              return false;
+           }
+          }
+     }
+          }
+
+
+          function  get_user_password( $va_Mobil_number)
+          {
+            if($stmt = $this->con->prepare("SELECT  `password` FROM `users` WHERE `mob_number`=? "))
+            {
+               $stmt->bind_param("s",$va_Mobil_number);
+
+               $stmt->bind_result($res_password);
+
+               if($stmt->execute())
+               {
+                  if($stmt->fetch())
+                  {
+                     return $res_password;
+                  }
+                  else
+                  {
+                    return false;
+                  }
+               }
+            }
+          }
+
+
+ }
+?>
+
+
+
+
+
+<?php
+ 
+ 
+      date_default_timezone_set('Asia/kolkata');
+
+ class class_dii
+ {
+     private $con;
+
+     function __construct()
+     {
+        $this->con=new mysqli("localhost","root","","fun5");
+
+     }
+
+     function create_user_account($res_category,$user)
+     {
+         $current_date  = date("Y-m-d");
+         $current_time  = date("H:i:s A");
+
+        if($stmt = $this->con->prepare("INSERT INTO `cat` (`category`, `user`,`date`, `time`) VALUES (?,?,?,?)"))
+         {
+            $stmt->bind_param("ssss",$res_category,$user,$current_date,$current_time);
+
+            if($stmt->execute())
+            {
+               return true;
+            }
+            else
+            {
+               return false;
+            }
+
+        }
+     }
+
+    function get_all_users_data()
+     {
+        if($stmt = $this->con->prepare("SELECT  `category` FROM `cat`  "))
+{
+     $stmt->bind_result($res_category);
+
+     if($stmt->execute())
+     {
+      $data= array();
+      $counter =0;
+
+      while($stmt->fetch())
+      {
+       
+         $data[$counter]['category']=$res_category;
+        
+
+         $counter++;
+      }
+      if(!empty($data))
+      {
+          return $data;
+      }
+      else
+      {
+         return false;
+      }
+     }
+}
+     }
+
+     function delete_user_record($del_id)
+     {
+      if($stmt = $this->con->prepare("DELETE FROM `cat` WHERE `id`=?"))
+      {
+            $stmt->bind_param("i",$del_id);
+
+            if($stmt->execute())
+            {
+               return true;
+            }
+            else
+            {
+                 return false;
+            }
+      }
+     }
+
+
+     function update_user_account( $va_category,$res_edit_id )
+{
+
+    $current_date = date("Y-m-d");
+    $current_time=date("H:i:s A");
+
+
+    if($stmt=$this->con->prepare("UPDATE `cat` SET `category`=?,`date`=?,`time`=? WHERE 'id`=? "))
+    {
+          $stmt->bind_param("sssi", $va_category, $current_date, $current_time,$res_edit_id);
+
+          if($stmt->execute())
+          {
+            return true;
+          }
+          else
+          {
+             return false;
+          }
+    }
+}
+
+
+function get_user_data_from_id( $res_edit_id)
+{
+   if($stmt = $this->con->prepare("SELECT `id`, `category`, `date`, `time` FROM `id` where `id`=?  "))
+   {
+      
+      $stmt->bind_param("i",$res_edit_id);
+
+        $stmt->bind_result($res_id,$res_category,$res_date,$res_time);
+   
+        if($stmt->execute())
+        {
+         $data= array();
+         
+   
+       if($stmt->fetch())
+         {
+            $data['id'] = $res_id;
+            $data['category']=$res_category;
+            $data['date']=$res_date;
+            $data['time']=$res_time;
+   
+            
+         }
+         if(!empty($data))
+         {
+             return $data;
+         }
+         else
+         {
+            return false;
+         }
+        }
+   }
+
+}
+ }
+
+ 
+?>
+
+
+
+
+<?php
+
+class class_functions
+{
+     private $con;
+
+     function __construct()
+     {
+        $this->con=new mysqli("localhost","root","","fun");
+     }
+
+     function create_user_account($frist_name,$last_name,$country,$subject)
+     {
+        if($stmt = $this->con->prepare("INSERT INTO `user`( `frist_name`, `last_name`, `country`, `subject`, `date`, `time`) VALUES (?,?,?,?,?,?)"))
+        {
+            $stmt->bind_param("ssssss","$frist_name,$last_name,$country,$subject,$current_date,$current_time");
+
+            if($stmt->execute())
+            {
+               return true;
+            }
+            else
+            {
+               return false;
+            }
+
+        
+        }
+     }
+ 
+
+
+     function get_all_users_data()
+     {
+        if($stmt = $this->con->prepare("SELECT `id`, `frist_name`, `last_name`, `country`, `subject`, `date`, `time` FROM `user`"))
+{
+     $stmt->bind_result($res_id,$res_first_name,$res_last_name,$res_country,$res_subject,$res_date,$res_time);
+
+     if($stmt->execute())
+     {
+      $data= array();
+      $counter =0;
+
+      while($stmt->fetch())
+      {
+         $data[$counter]['id'] = $res_id;
+         $data[$counter]['frist_name']=$res_first_name;
+         $data[$counter]['last_name']=$res_last_name;
+         $data[$counter]['country']=$res_country;
+         $data[$counter]['subject']=$res_subject;
+         $data[$counter]['date']=$res_date;
+         $data[$counter]['time']=$res_time;
+
+         $counter++;
+      }
+      if(!empty($data))
+      {
+          return $data;
+      }
+      else
+      {
+         return false;
+      }
+     }
+}
+     }
+
+     function delete_user_record($del_id)
+     {
+      if($stmt = $this->con->prepare("Delete from `users` where `id`=?"))
+      {
+            $stmt->bind_param("i",$del_id);
+
+            if($stmt->execute())
+            {
+               return true;
+            }
+            else
+            {
+                 return false;
+            }
+      }
+     }
+
+
+
+     
+    function update_user_acount( $res_id,$res_first_name,$res_last_name,$res_country,$res_subject, $res_edit_id)
+    {
+    
+        $current_date = date("Y-m-d");
+        $current_time=date("H:i:s A");
+    
+    
+        if($stmt=$this->con->prepare("UPDATE `user` SET `frist_name`=?,`last_name`=?,`country`=?,`subject`=?,`date`=?,`time`=? WHERE 1 `id`=?"))
+        {
+              $stmt->bind_param("ssssssi",$res_first_name,$res_last_name,$res_country,$res_subject, $va_Enter_Date,$current_date, $current_time,$res_edit_id);
+    
+              if($stmt->execute())
+              {
+                return true;
+              }
+              else
+              {
+                 return false;
+              }
+        }
+    }
+    
+
+     
+ }
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+
+date_default_timezone_set('Asia/kolkata');
+
+
+class class_tii
+{
+    private $con;
+
+    function __construct()
+    {
+        $this->con=new mysqli("localhost","root","","dt_dream2");
+
+    }
+
+    function create_user_account($select_category,$enter_title,$enter_amount, $enter_date,$user)
+     {
+        $current_date= date("Y-m-d");
+        $current_time= date("H:i:s A");
+
+        if($stmt = $this->con->prepare("INSERT INTO `users2`( `select_category`, `enter_title`, `enter_amount`, `enter_date`, `date`, `time`) VALUES (?,?,?,?,?,?)"))
+        {
+            $stmt->bind_param("ssisss",$select_category,$enter_title,$enter_amount, $enter_date,$current_date,$current_time);
+
+            if($stmt->execute())
+            {
+               return true;
+            }
+            else
+            {
+               return false;
+            }
+        }
+    }
+
+
+    function get_total()
+    {
+      if($stmt = $this->con->prepare("SELECT sum( `enter_amount` ) FROM `users2`"))
+      {
+         $stmt->bind_result($var_total);
+         if($stmt->execute())
+         {
+            return $var_total;
+         }
+         else{
+            return false;
+         }
+      }
+
+
+
+    }
+    function get_all_users_data()
+    {
+       if($stmt = $this->con->prepare("SELECT `no`, `select_category`, `enter_title`, `enter_amount`, `enter_date`, `date`, `time` FROM `users2`"))
+{
+    $stmt->bind_result($res_no,$res_select_category,$res_enter_title,$res_enter_amount,$res_enter_date,$res_date,$res_time);
+
+    if($stmt->execute())
+    {
+     $data= array();
+     $counter =0;
+
+     while($stmt->fetch())
+     {
+        $data[$counter]['no'] = $res_no;
+        $data[$counter]['select_category']=$res_select_category;
+        $data[$counter]['enter_title']=$res_enter_title;
+        $data[$counter]['enter_amount']=$res_enter_amount;
+        $data[$counter]['enter_date']=$res_enter_date;
+        $data[$counter]['date']=$res_date;
+        $data[$counter]['time']=$res_time;
+
+        $counter++;
+     }
+     if(!empty($data))
+     {
+         return $data;
+     }
+     else
+     {
+        return false;
+     }
+    }
+}
+    }
+
+    function delete_user_record($del_no)
+    {
+     if($stmt = $this->con->prepare("Delete from `users2` where `no`=?"))
+     {
+           $stmt->bind_param("i",$del_no);
+
+           if($stmt->execute())
+           {
+              return true;
+           }
+           else
+           {
+                return false;
+           }
+     }
+    }
+
+    function update_user_account( $va_Category,$va_Enter_Title, $va_Enter_Amount, $va_Enter_Date, $res_edit_id)
+{
+
+    $current_date = date("Y-m-d");
+    $current_time=date("H:i:s A");
+
+
+    if($stmt=$this->con->prepare("UPDATE `users2` SET `select_category`=?,`enter_title`=?,`enter_amount`=?,`enter_date`=?,`date`=?,`time`=? WHERE `id`=?"))
+    {
+          $stmt->bind_param("ssisssi",$va_Category,$va_Enter_Title, $va_Enter_Amount, $va_Enter_Date,$current_date, $current_time,$res_edit_id);
+
+          if($stmt->execute())
+          {
+            return true;
+          }
+          else
+          {
+             return false;
+          }
+    }
+}
+
+
+function get_user_data_from_id( $res_edit_id)
+{
+    if($stmt = $this->con->prepare("SELECT `no`, `select_category`, `enter_title`, `enter_amount`, `enter_date`, `date`, `time` FROM `users2` WHERE  `id`=?"))
+{
+    $stmt->bind_param("i",$res_edit_id);
+
+ $stmt->bind_result($res_no,$res_select_category,$res_enter_title,$res_enter_amount,$res_enter_date,$res_date,$res_time);
+
+ if($stmt->execute())
+ {
+  $data= array();
+
+
+  if($stmt->fetch())
+  {
+     $data['no'] = $res_no;
+     $data['select_category']=$res_select_category;
+     $data['enter_title']=$res_enter_title;
+     $data['enter_amount']=$res_enter_amount;
+     $data['enter_date']=$res_enter_date;
+     $data['date']=$res_date;
+     $data['time']=$res_time;
+
+     
+  }
+  if(!empty($data))
+  {
+      return $data;
+  }
+  else
+  {
+     return false;
+  }
+ }
+}
+
+}
+
+}
+
+?>
+
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>
+About us
+        </title>
+        <link rel="stylesheet" type="text/css" href="css\bootstrap.css">
+
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-grid.css">
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-reboot.css">
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-utilities.css">
+
+        <script type="text/javascript" src="js\bootstrap.js"></script>
+             <script type="text/javascript" src="js\bootstrap.bundle.js"></script>
+        
+<style>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.column {
+  float: left;
+  width: 33.3%;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  margin: 8px;
+}
+
+.about-section {
+  padding: 50px;
+  text-align: center;
+  background-color: #474e5d;
+  color: white;
+}
+
+.container {
+  padding: 0 16px;
+}
+
+.container::after, .row::after {
+  content: "";
+  clear: both;
+  display: table;
+  
+}
+
+.title {
+  color: grey;
+}
+
+.button {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+}
+
+.button:hover {
+  background-color: #555;
+}
+.apper
+{
+    font-size: 25px;
+    font-family: 'Times New Roman';
+    border:2px solid black;
+    margin-left:700px;
+    margin-right:680px;
+    margin-top:110px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+
+
+@media screen and (max-width: 650px)
+ {
+  .column 
+  {
+    width: 100%;
+    display: block;
+  }
+  .nav-item
+  {
+    margin-left:200px;
+    margin-right:200px;
+  }
+  .apper
+{
+    font-size: 25px;
+    font-family: 'Times New Roman';
+    border:2px solid black;
+    margin-left:70px;
+    margin-right:80px;
+    margin-top:110px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+}
+
+
+
+
+
+
+
+@media only screen and (max-width: 800px)
+{
+
+.apper
+{
+    font-size: 10px;
+    font-family: 'Times New Roman';
+    border:2px solid black;
+    margin-left:10px;
+    margin-right:px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    padding:5px;
+    width:60px;
+     bottom:40px;
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.nav-item 
+{
+        margin-left:50px;
+        bottom:40px;
+}
+}
+</style>
+</head>
+<body>
+
+<div class="about-section">
+  <h1>#Expence Manger </h1>
+  <p>Here,We provide Total month mangement </p>
+  <p></p>
+</div>
+
+<h2 style="text-align:center">Our Team</h2>
+<div class="row">
+  <div class="column">
+    <div class="card">
+    <img src="IMAGES\shiv3.jpg" alt="jane" style="width:100%">
+      <div class="container">
+        <h2>Shivraj  Talwar</h2>
+         <p class="title">#Developer </p>
+        <p>Hii I am Shivraj & I am Developer of this Website</p>
+        <p> shivrajtalwar07@gamil.com</p>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="column">
+    <div class="card">
+    <img src= "IMAGES\par1.jpg" alt="jane" style="width:100%">
+      <div class="container">
+      <h2> Pranali Balundagi</h2>
+        <p class="title">#Front-page Designe</p>
+        <p> Hii I am Pranali & I am Front-page Designer of this Company</p>
+        <p>pranalibalundagi7@gamil.com </p>
+      </div>
+    </div>
+
+
+    
+
+
+
+  </div>
+  
+  <div class="column">
+    <div class="card">
+          <img src= "IMAGES\meg4.jpg" alt="jane" style="width:100%">
+      <div class="container">
+        <h2>Meghraj Vahtkar</h2>
+        <p class="title">#Back-end Designer</p>
+        <p>Hii I am Meghraj & I am Back-end Designer  of this Company.</p>
+        <p>Megherajvhatkar1@gmail.com</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<li class="nav-item ">
+                    <a class="nav-link active apper " aria-current="page" href="index.php">Home</a>
+                  </li>
+</body>
+</html>
+          
+
+
+<?php
+
+require_once('lb/functions.php');
+  $db = new class_tii();
+$db2=new class_mi();
+if(isset($_POST['submit']))
+{
+    $va_Category 	    =   $_POST['Category'];
+    $va_Enter_Title      =   $_POST['title'];
+    $va_Enter_Amount     =   $_POST['number'];
+    $va_Enter_Date       =   $_POST['date'];
+   
+  
+   $db->create_user_account( $va_Category,$va_Enter_Title, $va_Enter_Amount, $va_Enter_Date,$user);
+}
+?>
+
+
+
+
+
+
+<html>
+
+<head>
+ <center><title>Expense Manager </title></center>
+ <style>
+.hii{
+    margin-top:15px;
+   
+    border:2px solid black;
+    padding: 5px;
+    font-size:30px;
+    border-radius: bold;
+    background: linear-gradient(to bottom, #00ff99 0%, #cc66ff 100%) !important;
+
+}
+.oii
+{
+   
+    background: linear-gradient(to bottom, #00ff99 0%, #cc66ff 100%) !important;
+    font-size:30px;
+    width:330px;
+    padding: 5px;
+    border:2px solid black;
+    border-size:20px;
+    margin-top:10px;
+
+
+}
+.dii
+{
+    margin-left: 120px;
+    margin-right: 300px;
+    
+    padding: 8px;
+    margin-top: 40px;
+    background: linear-gradient(to bottom, #00ff99 0%, #cc66ff 100%) !important;
+
+}
+.nii
+{
+    font-size: 30px;
+    margin-left: 510px !important;
+    margin-right: 550px;
+    margin-top: 30px;
+    padding: 40px;
+    border: 3px solid #ff66cc;
+}
+.fii
+{
+margin-right:90px;
+margin-left:50px;
+color:light;
+}  
+.sii
+    {
+    font-size: 25px;
+    border:2px solid black;
+    margin-left:1060px;
+    margin-top:30px;
+    width:140px;
+    padding:10px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.oii
+{
+   
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    font-size:25px;
+    width:330px;
+    padding: 10px;
+    border-radius:15px;
+    border:2px solid black;
+    border-size:20px;
+
+
+}
+.cat
+{
+    margin-top:30px;
+    margin-left:30px;
+
+}
+.pii
+{
+    background: linear-gradient(to bottom, #00ff99 0%, #cc66ff 100%) !important;
+    font-size:20px;
+    width:330px;
+    padding: 5px;
+    border-radius:15px;
+    border:2px solid black;
+    margin-left:660px;
+    
+
+}
+.mat
+{
+    margin-top:60px;
+}
+
+@media only screen and (max-width: 800px)
+{
+.hii{
+    margin-top:15px;
+   
+    border:2px solid black;
+    padding: 5px;
+    font-size:30px;
+    border-radius: bold;
+    background: linear-gradient(to bottom, #00ff99 0%, #cc66ff 100%) !important;
+
+}
+
+.dii
+{
+    margin-left: 70px;
+    margin-right: 300px;
+    padding: 2px;
+    margin-top: 40px;
+    margin-top:15px;
+   
+    border:2px solid black;
+    padding: 5px;
+    border-radius: bold;
+    background: linear-gradient(to bottom, #00ff99 0%, #cc66ff 100%) !important;
+
+
+}
+.nii
+{
+    font-size: 30px;
+    margin-left: 130px !important;
+    margin-right: 150px;
+    margin-top: 100px;
+    padding: 30px;
+    border: 3px solid #ff66cc;
+}
+.fii
+{
+margin-right:40px;
+margin-left:20px;
+color:light;
+font-size:20px;
+}  
+.sii
+    {
+    font-size: 10px;
+    border:2px solid black;
+    margin-left:300px;
+    margin-top:30px;
+    width:140px;
+    padding:10px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.oii
+{
+   
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    font-size:10px;
+    width:200px;
+    margin-left:15px;
+    padding: 10px;
+    border-radius:10px;
+    border:2px solid black;
+    border-size:20px;
+
+
+}
+.mat
+{
+    margin-top:90px;
+    margin-left:20px;
+
+}
+.pii
+{
+    background: linear-gradient(to bottom, #00ff99 0%, #cc66ff 100%) !important;
+    font-size:20px;
+    width:330px;
+    padding: 5px;
+    border-radius:15px;
+    border:2px solid black;
+    margin-left:280px;
+    
+
+}
+
+
+}
+
+
+ </style>
+ 
+</head>
+
+<body background="IMAGES\syss.jpg" style="background-size: 100% 1000px; background-repeat:no-repeat;">
+
+<div class="cat" >
+<a class="oii" href="category5.php">Category</a>
+<a class="sii" href="report2.php">Total Report </a>
+</div>
+<form action="addexpence2.php" method="POST">
+
+    <div class="nii">
+ <label class="fii">Select Category </label>
+<select type="text" name="Category" class="hii oii">
+
+<?php
+          $users_data =array();
+          $users_data =$db2->get_category_data();
+         
+         if(!empty($users_data))
+         {
+          $counter = 0;
+
+          foreach($users_data as $record )
+          {
+               
+               $res_category    = $users_data[$counter]['category'];
+            
+          
+            ?>
+            <option> <?php echo $res_category; ?> </option>
+            <?php
+               $counter++;
+          }
+     } 
+         ?>  
+ <option>Category </option>
+<option>Market</option>
+<option>TV Balance</option>
+<option>Mobile Recharge</option>
+<option>Gas</option>
+<option>Function</option>
+<option>Vegitable</option>
+<option>Petrol</option>
+<option>Eduction</option>
+<option>Light Bill</option>
+<option>LIC </option>
+<option>Rashan</option>
+<option>House Rent</option>
+<option>Water Bill</option>
+
+
+</select>
+
+<br />
+
+<label class="fii">Enter Title</title>
+<input type="text" class=" hii oii " name="title" placeholder="Enter Title" />
+
+<br />
+
+<label class="fii">Enter Amount </label>
+<input type="number" class="oii " name="number" placeholder="Enter Amount" />
+
+<br />
+
+<label class="fii">Enter Date </label>
+<input type="date" class=" hii oii" name="date" />
+
+<br >
+<input type="submit" class=" dii"  name="submit" placeholder="Submit" />
+
+
+
+</div>
+</form>
+
+<div class="mat" >
+<a class="pii" href="dashbord.php">Log out</a>
+    </div>
+</body>
+
+</html>
+
+<html>
+    <head>
+        <title>Admin
+        </title>
+        <link rel="stylesheet" type="text/css" href="css\bootstrap.css">
+
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-grid.css">
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-reboot.css">
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-utilities.css">
+
+        <script type="text/javascript" src="js\bootstrap.js"></script>
+             <script type="text/javascript" src="js\bootstrap.bundle.js"></script>
+       
+        <style>
+
+.apper
+{
+    font-size: 35px;
+    font-family: 'Times New Roman';
+    border:3px solid black;
+    margin-left:700px;
+    margin-right:600px;
+    margin-top:100px;
+    border-radius:250px;
+    padding:5px;
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+}
+.apper1
+{
+    font-size: 35px;
+    font-family: 'Times New Roman';
+    border:3px solid black;
+    margin-left:670px;
+    margin-right:570px;
+    margin-top:180px;
+    border-radius:250px;
+    padding:5px;
+}
+.apper1:hover
+{
+    color:white !important;
+    background-color: black;
+}
+
+            </style>
+            </head>
+            <body class="wii" background="IMAGES\download.jpg"style="background-size: 100% 1000px; background-repeat:no-repeat;" >
+ <li class="nav-item">
+                    
+                    <a class="nav-link active apper jii" aria-current="page" href="report.php" >Reg Report</a>
+
+                    <a class="nav-link active apper1 jii" aria-current="page" href="report5.php" >Option Report</a>
+
+
+                 
+                  </li>
+</body>           
+
+    </html>
+
+
+
+
+    <?php
+if(isset($_POST['submit']))
+{
+
+  $va_Mobil_number     =   $_POST['text'];
+  $va_password         =   $_POST['password'];
+
+ $db_password = $db->get_user_password( $va_Mobil_number);
+}
+?>
+
+
+<html>
+    <head>
+        <title>
+Login Page
+        </title>
+        <link rel="stylesheet" type="text/css" href="css\bootstrap.css">
+
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-grid.css">
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-reboot.css">
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-utilities.css">
+
+        <script type="text/javascript" src="js\bootstrap.js"></script>
+             <script type="text/javascript" src="js\bootstrap.bundle.js"></script>
+        <style>
+.complogo
+{
+    width:200px;
+    height:200px;
+
+}
+.pos
+{
+    margin-right:200px;
+}
+.apper
+{
+    font-size: 25px;
+    font-family: 'Times New Roman';
+    border:2px solid black;
+    margin-left:160px;
+    margin-right:250px;
+    margin-top:60px;
+    width:80px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.bgcolor
+{
+  background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+
+}
+.log-form
+{
+  border:2px solid black;
+  width:350px;
+  height:430px;
+  border-radius: 20px;
+  margin-left:500px !important;
+  margin-right:450px !important; 
+  margin-top:30px !important;
+  background: linear-gradient(to bottom, #ffff99 0%, #ffffff 100%);
+    font-size: 20px;
+     margin: 5px;
+
+}
+.fii
+{
+  padding: 40px;
+  font-size: 40px;
+  color:black;
+}
+.gii
+{
+  
+ margin-top: 30px; 
+ margin-left:30px;
+margin-right:32px !important;
+border-radius: 30px;
+font-size: 25px;
+background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+}
+
+.pii
+{
+  margin-left:140px;
+  margin-right:100px !important;
+  margin-top:40px;
+  font-size:20px;
+  background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+
+}
+
+.wii
+{  
+  margin-top:120px;
+ background="IMAGES\download 6.jpg" style="background-size: 100% 1000px; background-repeat:no-repeat;
+
+
+}
+.jii
+{
+  margin-top:30px;
+}
+.in
+{
+   font-size: 40;
+   margin-right: 100px; 
+   margin-bottom: 80px;
+}
+
+@media only screen and (max-width: 800px)
+{
+  .complogo
+{
+    width:200px;
+    height:200px;
+
+}
+.pos
+{
+    margin-right:200px;
+}
+.apper
+{
+    font-size: 25px;
+    font-family: 'Times New Roman';
+    border:2px solid black;
+    margin-left:160px;
+    margin-right:250px;
+    margin-top:60px;
+    width:80px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.bgcolor
+{
+  background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+
+}
+.log-form
+{
+  border:2px solid black;
+  width:200px;
+  height:400px;
+  border-radius: 20px;
+  margin-left:50px !important;
+  margin-right:60px !important; 
+  margin-top:40px !important;
+  background: linear-gradient(to bottom, #ffff99 0%, #ffffff 100%);
+    font-size: 15px;
+     margin: 5px;
+
+}
+.fii
+{
+  padding: 40px;
+  font-size: 50px;
+  color:black;
+}
+.gii
+{
+  
+ margin-top: 20px; 
+ margin-left:10px;
+margin-right:32px !important;
+border-radius: 10px;
+font-size: 15px;
+background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+}
+
+.pii
+{
+  margin-left:140px;
+  margin-right:100px !important;
+  margin-top:40px;
+  font-size:20px;
+  background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+
+}
+
+.wii
+{  
+  margin-top:120px;
+  margin-left:10px;
+ background="C:\wamp64\www\IMAGES\download 6.jpg" style="background-size: 100% 1000px; background-repeat:no-repeat;
+
+
+}
+.jii
+{
+  margin-top:30px;
+}
+.in
+{
+   font-size: 40;
+   margin-right: 100px; 
+   margin-bottom: 80px;
+}
+
+}
+
+
+
+            </style>
+    </head>
+
+    <body class="wii" background="IMAGES\download 6.jpg" style="background-size: 100% 1000px; background-repeat:no-repeat;" >
+
+          
+          
+<form action="Login1.php" method="POST">
+
+          <div class="log-form">
+     <center><label class="fii">Admin Login</label></center> 
+  <input type="text"  class="gii" name="number" placeholder="Enter the Number" />
+  
+  <br />
+   
+  <input type="password" class="gii" name="password" placeholder="Enter the password" />
+  
+  <br />
+  
+   
+  <input type="submit" class="pii"  name="submit" placeholder="Sign in " />
+
+  <br />
+
+  <br />
+</form>
+
+      
+      
+<li class="nav-item ">
+                    <a class="nav-link active apper " aria-current="page" href="index.php">Home</a>
+                  </li>
+
+
+    </body>
+</html>
+
+<?php
+
+require_once('lb/functions.php');
+  $db = new class_dii();
+  $user=$_SESSION['Login_mon_no'];
+
+  
+
+
+if(isset($_POST['submit']))
+{
+        $category     =   $_POST['text'];
+
+
+    
+  $db->create_user_account($category,$user);
+echo  $user;
+}
+
+
+
+?>   
+   <html>
+
+<head>
+ <style>
+.oii
+{
+padding: 30px;
+font-size: 70px;
+margin-right: 20px;
+margin-top: 20px;
+
+}
+ .mi{
+         border: 2px solid black;
+         background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+         padding: 10px;
+        font-size: 35px;
+        margin-right: 50px;
+        margin-left: 500px;
+        margin-top: 70px;
+
+ }
+ .mii
+ {
+    border: 2px solid black;
+         background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+         padding: 10px;
+        font-size: 20px;
+        margin-right: 50px;
+        margin-left: 650px;
+        margin-top: 40px;
+ }
+.ki
+     {
+         
+    background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+     border:2px solid black;
+    padding: 5px;
+    font-size:15px;
+ }
+ 
+.yii
+    {
+    font-size: 25px;
+    border:2px solid black;
+    margin-left:1060px;
+    margin-top:30px;
+    width:140px;
+    padding:10px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.aii
+{
+   
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    font-size:25px;
+    width:330px;
+    padding: 10px;
+    border-radius:15px;
+    border:2px solid black;
+    border-size:20px;
+
+
+}
+.cat
+{
+    margin-top:30px;
+    margin-left:30px;
+
+}
+.pii
+{
+    background: linear-gradient(to bottom, #00ff99 0%, #cc66ff 100%) !important;
+    font-size:20px;
+    width:330px;
+    padding: 5px;
+    border-radius:15px;
+    border:2px solid black;
+    margin-left:630px;
+    
+
+}
+.nii
+{
+       margin-top:150px;
+
+}
+ @media only screen and (max-width: 800px)
+ {
+       
+.oii
+{
+padding: 30px;
+font-size: 50px;
+margin-right: 17px;
+margin-top: 20px;
+
+}
+ .mi{
+         border: 2px solid black;
+         background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+         padding: 10px;
+        font-size: 25px;
+        margin-right: 80px;
+        margin-left: 180px;
+        margin-top: 120px;
+
+ }
+ .mii
+ {
+    border: 2px solid black;
+         background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+         padding: 4px;
+        font-size: 10px;
+        margin-right: 50px;
+        margin-left: 320px;
+        margin-top: 40px;
+ }
+.ki
+     {
+         
+    background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+           border:2px solid black;
+    padding: 5px;
+    font-size:15px;
+    
+     }
+     .yii
+    {
+    font-size: 15px;
+    border:2px solid black;
+    margin-left:300px;
+    margin-top:30px;
+    width:140px;
+    padding:10px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.aii
+{
+   
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    font-size:15px;
+    width:330px;
+    margin-top:10px;
+    padding: 10px;
+    border-radius:15px;
+    border:2px solid black;
+    border-size:20px;
+
+
+}
+.cat
+{
+    margin-top:30px;
+    margin-left:20px;
+
+}
+.pii
+{
+    background: linear-gradient(to bottom, #00ff99 0%, #cc66ff 100%) !important;
+    font-size:20px;
+    width:330px;
+    padding: 5px;
+    border-radius:15px;
+    border:2px solid black;
+    margin-left:280px;
+    
+
+}
+.nii
+{
+       margin-top:20px;
+
+}
+.sii
+{
+    margin-top:140px;
+
+ }
+
+ }
+ </style>
+</head>
+
+<body background="IMAGES\system.jpg "style="background-size: 100% 1000px; background-repeat:no-repeat;">
+<div class="cat" >
+<a class="aii" href="addexpence2.php">Add Choise</a>
+<a class="yii" href="report2.php">Total Report </a>
+</div>
+
+<form action="category5.php" method="POST">
+
+ <center><h1 class="oii">Category Master</h1></center>
+<input type="text" class="mi" name="text" placeholder="Category Name" />
+<br />
+<input type="submit" class="mii" name="submit" placeholder="Submit" />
+
+</form>
+
+<div class="nii cat sii" >
+<a class="pii" href="dashbord.php">Log out</a>
+    </div>
+</body>
+
+</html>
+
+<?php
+
+require_once('lb/functions.php');
+  $db = new class_dii();
+  $user=$_SESSION['Login_mon_no'];
+
+  
+
+
+if(isset($_POST['submit']))
+{
+        $category     =   $_POST['text'];
+
+
+    
+  $db->create_user_account($category,$user);
+echo  $user;
+}
+
+
+
+?>   
+   <html>
+
+<head>
+ <style>
+.oii
+{
+padding: 30px;
+font-size: 70px;
+margin-right: 20px;
+margin-top: 20px;
+
+}
+ .mi{
+         border: 2px solid black;
+         background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+         padding: 10px;
+        font-size: 35px;
+        margin-right: 50px;
+        margin-left: 500px;
+        margin-top: 70px;
+
+ }
+ .mii
+ {
+    border: 2px solid black;
+         background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+         padding: 10px;
+        font-size: 20px;
+        margin-right: 50px;
+        margin-left: 650px;
+        margin-top: 40px;
+ }
+.ki
+     {
+         
+    background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+     border:2px solid black;
+    padding: 5px;
+    font-size:15px;
+ }
+ 
+.yii
+    {
+    font-size: 25px;
+    border:2px solid black;
+    margin-left:1060px;
+    margin-top:30px;
+    width:140px;
+    padding:10px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.aii
+{
+   
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    font-size:25px;
+    width:330px;
+    padding: 10px;
+    border-radius:15px;
+    border:2px solid black;
+    border-size:20px;
+
+
+}
+.cat
+{
+    margin-top:30px;
+    margin-left:30px;
+
+}
+.pii
+{
+    background: linear-gradient(to bottom, #00ff99 0%, #cc66ff 100%) !important;
+    font-size:20px;
+    width:330px;
+    padding: 5px;
+    border-radius:15px;
+    border:2px solid black;
+    margin-left:630px;
+    
+
+}
+.nii
+{
+       margin-top:150px;
+
+}
+ @media only screen and (max-width: 800px)
+ {
+       
+.oii
+{
+padding: 30px;
+font-size: 50px;
+margin-right: 17px;
+margin-top: 20px;
+
+}
+ .mi{
+         border: 2px solid black;
+         background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+         padding: 10px;
+        font-size: 25px;
+        margin-right: 80px;
+        margin-left: 180px;
+        margin-top: 120px;
+
+ }
+ .mii
+ {
+    border: 2px solid black;
+         background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+         padding: 4px;
+        font-size: 10px;
+        margin-right: 50px;
+        margin-left: 320px;
+        margin-top: 40px;
+ }
+.ki
+     {
+         
+    background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+           border:2px solid black;
+    padding: 5px;
+    font-size:15px;
+    
+     }
+     .yii
+    {
+    font-size: 15px;
+    border:2px solid black;
+    margin-left:300px;
+    margin-top:30px;
+    width:140px;
+    padding:10px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.aii
+{
+   
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    font-size:15px;
+    width:330px;
+    margin-top:10px;
+    padding: 10px;
+    border-radius:15px;
+    border:2px solid black;
+    border-size:20px;
+
+
+}
+.cat
+{
+    margin-top:30px;
+    margin-left:20px;
+
+}
+.pii
+{
+    background: linear-gradient(to bottom, #00ff99 0%, #cc66ff 100%) !important;
+    font-size:20px;
+    width:330px;
+    padding: 5px;
+    border-radius:15px;
+    border:2px solid black;
+    margin-left:280px;
+    
+
+}
+.nii
+{
+       margin-top:20px;
+
+}
+.sii
+{
+    margin-top:140px;
+
+ }
+
+ }
+ </style>
+</head>
+
+<body background="IMAGES\system.jpg "style="background-size: 100% 1000px; background-repeat:no-repeat;">
+<div class="cat" >
+<a class="aii" href="addexpence2.php">Add Choise</a>
+<a class="yii" href="report2.php">Total Report </a>
+</div>
+
+<form action="category5.php" method="POST">
+
+ <center><h1 class="oii">Category Master</h1></center>
+<input type="text" class="mi" name="text" placeholder="Category Name" />
+<br />
+<input type="submit" class="mii" name="submit" placeholder="Submit" />
+
+</form>
+
+<div class="nii cat sii" >
+<a class="pii" href="dashbord.php">Log out</a>
+    </div>
+</body>
+
+</html>
+
+<html>
+<head>
+
+
+
+
+<style>
+
+
+.nii
+{
+    margin-top:200px !important;
+    margin-left:185px;
+    font-family:cambria;
+    font-size:50px;
+    padding:20px;
+    border:2px solid #862B0D;
+    background-color: #FFC95F;
+    border-radius:20px;
+    color:#D34C26;
+    text-decoration:none;
+    position:center;
+
+}
+
+.align
+{
+    margin-top:300px;
+
+
+}
+.jii
+{
+    margin-top:270px;
+    border:1px solid black;
+    width:50px;
+    margin-left:720px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    padding:5px;
+}
+@media only screen and (max-width: 800px)
+{
+.nii
+{
+    margin-top:400px !important;
+    margin-left:5px;
+    font-family:cambria;
+    padding:5px;
+    border:2px solid #862B0D;
+    background-color: #FFC95F;
+    border-radius:10px;
+    color:#D34C26;
+    text-decoration:none;
+    position:center;
+
+}
+
+.align
+{
+    margin-top:300px;
+   
+
+
+}
+.jii
+{
+    margin-top:270px;
+    border:1px solid black;
+    width:50px;
+    margin-left:30px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    padding:5px;
+}
+}
+    </style>
+
+<body background="IMAGES\west in indin meghraj.webp" style="background-size: 100% 1000px; background-repeat:no-repeat;">
+    <div class="align">
+
+
+
+
+
+    <a class="nii" href="category5.php">Category</a>
+
+ 
+    <a class="nii"  href="addexpence2.php">Add Choise</a>
+    
+    <a class="nii" href="report2.php">Total Report </a>
+   
+
+
+
+
+</div>
+<br>
+<br>
+<div class="jii">
+<center><a href="Login1.php?logout">Logout</a></center>
+</div>
+</body>
+
+
+</head>
+</html>
+
+
+
+<html>
+<head>
+
+
+
+
+<style>
+
+
+.nii
+{
+    margin-top:200px !important;
+    margin-left:185px;
+    font-family:cambria;
+    font-size:50px;
+    padding:20px;
+    border:2px solid #862B0D;
+    background-color: #FFC95F;
+    border-radius:20px;
+    color:#D34C26;
+    text-decoration:none;
+    position:center;
+
+}
+
+.align
+{
+    margin-top:300px;
+
+
+}
+.jii
+{
+    margin-top:270px;
+    border:1px solid black;
+    width:50px;
+    margin-left:720px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    padding:5px;
+}
+@media only screen and (max-width: 800px)
+{
+.nii
+{
+    margin-top:200px !important;
+    margin-left:80px;
+    font-family:cambria;
+    font-size:20px;
+    padding:20px;
+    border:2px solid #862B0D;
+    background-color: #FFC95F;
+    border-radius:20px;
+    color:#D34C26;
+    text-decoration:none;
+    position:center;
+
+}
+
+.align
+{
+    margin-top:300px;
+
+
+}
+.jii
+{
+    margin-top:270px;
+    border:1px solid black;
+    width:50px;
+    margin-left:300px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    padding:5px;
+}
+}
+    </style>
+
+<body background="IMAGES\west in indin meghraj.webp" style="background-size: 100% 1000px; background-repeat:no-repeat;">
+    <div class="align">
+
+
+
+
+
+    <a class="nii" href="category5.php">Category</a>
+
+ 
+    <a class="nii"  href="addexpence2.php">Add Choise</a>
+    
+    <a class="nii" href="report2.php">Total Report </a>
+   
+
+
+
+
+</div>
+<br>
+<br>
+<div class="jii">
+<center><a href="Login1.php?logout">Logout</a></center>
+</div>
+</body>
+
+
+</head>
+</html>
+
+
+
+<html>
+<head>
+
+
+
+
+<style>
+
+
+.nii
+{
+    margin-top:200px !important;
+    margin-left:185px;
+    font-family:cambria;
+    font-size:50px;
+    padding:20px;
+    border:2px solid #862B0D;
+    background-color: #FFC95F;
+    border-radius:20px;
+    color:#D34C26;
+    text-decoration:none;
+    position:center;
+
+}
+
+.align
+{
+    margin-top:300px;
+
+
+}
+.jii
+{
+    margin-top:270px;
+    border:1px solid black;
+    width:50px;
+    margin-left:720px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    padding:5px;
+}
+@media only screen and (max-width: 800px)
+{
+.nii
+{
+    margin-top:200px !important;
+    margin-left:80px;
+    font-family:cambria;
+    font-size:20px;
+    padding:20px;
+    border:2px solid #862B0D;
+    background-color: #FFC95F;
+    border-radius:20px;
+    color:#D34C26;
+    text-decoration:none;
+    position:center;
+
+}
+
+.align
+{
+    margin-top:300px;
+
+
+}
+.jii
+{
+    margin-top:270px;
+    border:1px solid black;
+    width:50px;
+    margin-left:300px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    padding:5px;
+}
+}
+    </style>
+
+<body background="IMAGES\west in indin meghraj.webp" style="background-size: 100% 1000px; background-repeat:no-repeat;">
+    <div class="align">
+
+
+
+
+
+    <a class="nii" href="category5.php">Category</a>
+
+ 
+    <a class="nii"  href="addexpence2.php">Add Choise</a>
+    
+    <a class="nii" href="report2.php">Total Report </a>
+   
+
+
+
+
+</div>
+<br>
+<br>
+<div class="jii">
+<center><a href="Login1.php?logout">Logout</a></center>
+</div>
+</body>
+
+
+</head>
+</html>
+
+
+
+<?php
+
+require_once('lb/functions.php');
+  $db = new class_mi();
+
+
+  
+  global $res_edit_id ;
+  if(isset($_GET['edit_id']))
+  {
+        $res_edit_id  = $_GET['edit_id'];
+        $_SESSION['edit_id']  =  $res_edit_id ;
+  
+  }
+    $res_edit_id =  $_SESSION['edit_id'] ;
+
+if(isset($_POST['submit']))
+{
+   $va_full_name 	      = 	$_POST['text'];
+   $va_date             =   $_POST['date'];
+   $va_Mobil_number     =   $_POST['number'];
+   $va_email_name       =   $_POST['email'];
+   $va_password         =   $_POST['password'];
+ 
+
+
+    
+  $db->update_user_acount($va_full_name,$va_date,$va_Mobil_number,$va_email_name,$va_password,$res_edit_id);
+
+
+}
+
+$users_data = array();
+$users_data = $db->get_user_data_from_id( $res_edit_id);
+
+if(!empty($users_data))
+{
+  
+  $res_id          = $users_data['id'];
+  $res_full_name   = $users_data['full_name'];
+  $res_brith_date  = $users_data['brith_date'];
+  $res_mob_number = $users_data['mob_number'];
+  $res_email       = $users_data['email'];
+  $res_password    = $users_data['password'];
+  $res_date        = $users_data['date'];
+  $res_time        = $users_data['time'];
+}
+?>
+
+
+
+
+<html>
+
+<head>
+ 
+ <link rel="stylesheet" type="text/css" href="css\bootstrap.css">
+
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-grid.css">
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-reboot.css">
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-utilities.css">
+
+        <script type="text/javascript" src="js\bootstrap.js"></script>
+             <script type="text/javascript" src="js\bootstrap.bundle.js"></script>
+ <style>
+.nii
+{
+  background:linear-gradient(to bottom, #33ccff 0%, #ff99cc 100%);
+}
+
+ .tii
+ {
+    border:2px solid black;
+     margin-left:450px;
+    margin-right:500px;
+    font-size:30px;
+    background: linear-gradient(to bottom, #ccccff 0%, #ccffff 100%);
+
+     
+ }
+ .lii 
+ {
+  border:2px solid black ;
+
+ }
+ 
+ .kii
+ {
+     font-size: 30px;
+     margin: 90;
+     color: black
+ }
+.mii
+{
+   background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+   margin-right:50px;
+   margin-left:50px;
+   margin-top:15px;
+   border:2px solid black ;
+    padding: 10px;
+    font-size:30px;
+    
+    border-radius: 10px;
+    
+}
+.complogo
+{
+    width:200px;
+    height:200px;
+
+}
+.pos
+{
+    margin-right:130px;
+}
+.apper
+{
+    font-size: 25px;
+    font-family: 'Times New Roman';
+    border:2px solid black;
+    margin-left:15px;
+    border-radius:15px;
+    margin-bottom:90px;
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+}
+.bgcolor
+{
+  background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+    
+}
+
+.jii
+{    
+  background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+   margin-left:150px;
+  margin-right:100px;
+  margin-top:30px;
+}
+.bii
+{
+  margin-right:50px;
+   margin-left:50px;
+   background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+   margin-top:15px;
+   border:2px solid black ;
+    padding: 10px;
+    font-size:40px;
+    border-radius: 10px;
+    
+}
+.in
+{
+   font-size: 40;
+   margin-right: 100px; 
+   margin-bottom: 80px;
+}
+
+@media only screen and (max-width: 800px)
+{
+
+  .complogo
+{
+    width:80px;
+    height:100px;
+
+}
+.pos
+{
+    margin-right:100px;
+}
+.apper
+{
+  
+  font-size: 15px;
+    font-family: 'Times New Roman';
+    border:1px solid black;
+    margin-left:600px;
+    margin-right:300px;
+    border-radius:10px;
+    margin-bottom:0px !important;
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+}
+.bgcolor
+{
+  background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+    
+}
+.nii
+{
+  background:linear-gradient(to bottom, #33ccff 0%, #ff99cc 100%);
+}
+
+ .tii
+ {
+    border:2px solid black;
+     margin-left:200px;
+    margin-right:200;
+    font-size:15px;
+    background: linear-gradient(to bottom, #ccccff 0%, #ccffff 100%);
+
+     
+ }
+ .lii 
+ {
+  border:1px solid black ;
+  width:100%;
+
+ }
+ 
+ .kii
+ {
+     font-size: 20px;
+     margin-left: 90;
+     color: black
+ }
+.mii
+{
+   background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+   margin-right:50px;
+   margin-left:50px;
+   margin-top:15px;
+   border:2px solid black ;
+    padding: 10px;
+    font-size:15px;
+    
+    border-radius: 10px;
+    
+}
+
+
+.jii
+{    
+  background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+   margin-left:120px !important;
+  margin-right:100px;
+  margin-top:30px;
+}
+.bii
+{
+ margin-left:50px;
+font-size:20px;
+}
+.in
+{
+  margin-top:30px;
+  font-size: 30px;
+   margin-right: 10px; 
+}
+
+}
+
+ </style>
+</head>
+
+<body class="nii" >
+
+
+
+<form action="edit-record1.php" method="POST">
+
+
+ <div class="tii">
+ <lebel class="kii">Full_Name</label>
+<input type="text" class="mii" name="text" value="<?php echo $res_full_name; ?>" required placeholder="Enter First Name" />
+
+<br />
+
+<lebel class="kii">Brith Date</label>
+<input type="date" class="bii" name="date" value="<?php echo $res_date; ?>" required placeholder="Enter brith date" />
+
+<br />
+
+
+ <lebel class="kii">Mobile_number</label>
+<input type="number" class="mii" name="number" value="<?php echo $res_mob_number; ?>"  required placeholder="Enter The Number" />
+
+<br />
+
+ <lebel class="kii">  Email</label>
+<input type="email" class="mii" name="email" value="<?php echo $res_email;   ?>" required placeholder="Enter The Email" />
+
+<br />
+
+
+ <lebel class="kii"> Password</label>
+<input type="password" class="mii" name="password" value="<?php echo  $res_password; ?>" required placeholder="Enter The Password" />
+
+<br />
+
+
+
+<input type="submit" class="jii" name="submit" />
+</div>
+</form>
+
+</body>
+</html>
+
+<?php
+
+require_once('lb/functions.php');
+  $db = new class_tii();
+
+    
+   $res_edit_id =  " " ;
+  if(isset($_GET['edit_id']))
+  {
+        $res_edit_id  = $_GET['edit_id'];
+        $_SESSION['edit_id']  =  $res_edit_id ;
+  
+  }
+    $res_edit_id =  $_SESSION['edit_id'] ;
+
+if(isset($_POST['submit']))
+{
+    $va_Category 	    =   $_POST['Category'];
+   $va_Enter_Title      =   $_POST['title'];
+     $va_Enter_Amount     =   $_POST['number'];
+    $va_Enter_Date       =   $_POST['date'];
+   
+  
+  $db->update_user_account( $va_Category,$va_Enter_Title, $va_Enter_Amount, $va_Enter_Date,$res_edit_id);
+}
+
+$users_data = array();
+$users_data = $db->get_user_data_from_id( $res_edit_id);
+
+if(!empty($users_data))
+{
+$res_no                = $users_data['no'];
+$res_select_category   = $users_data['select_category'];
+$res_enter_title      = $users_data['enter_title'];
+$res_enter_amount       = $users_data['enter_amount'];
+$res_enter_date         = $users_data['enter_date'];
+$res_date              = $users_data['date'];
+$res_time               = $users_data['time'];
+}
+?>
+
+
+
+
+
+
+<html>
+
+<head>
+ <center><title>Update Manager </title></center>
+ <style>
+.hii{
+    margin-top:15px;
+    margin-right:23px;
+    margin-left:30px;
+    border:2px solid black;
+    padding: 5px;
+    font-size:30px;
+    border-radius: bold;
+    background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);;
+
+}
+.oii
+{
+    margin-right:600px !important;
+    margin-left:23px !important;
+    background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+    font-size:20px;
+    padding: 5px;
+    border:2px solid black;
+    border-size:20px;
+    margin-top:10px;
+
+
+}
+.dii
+{
+    margin-left: 70px;
+    margin-right: 300px;
+    padding: 8px;
+    margin-top: 40px;
+
+}
+.nii
+{
+    font-size: 30px;
+    margin-left: 500px;
+    margin-right: 550px;
+    margin-top: 100px;
+    padding: 40px;
+    border: 3px solid darkblue;
+}
+.fii
+{
+margin-right:90px;
+margin-left:50px;
+color:light;
+}  
+
+ </style>
+ 
+</head>
+
+<body background="IMAGES\cgr.jpg" style="background-size: 100% 1000px; background-repeat:no-repeat;">
+<form action="edit-record2.php" method="POST">
+
+    <div class="nii">
+ <label class="fii">Select Category </label>
+<select type="text" name="Category" class="hii">
+<option>Category </option>
+<option>Market</option>
+<option>TV Balance</option>
+<option>Mobile Recharge</option>
+<option>Gas</option>
+<option>Function</option>
+<option>Vegitable</option>
+<option>Petrol</option>
+<option>Eduction</option>
+<option>Light Bill</option>
+<option>LIC </option>
+<option>Rashan</option>
+<option>House Rent</option>
+<option>Water Bill</option>
+</select>
+
+<br />
+
+<label class="fii">Enter Title</title>
+<input type="text" class=" hii oii " name="title"   placeholder="Enter Title" />
+
+<br />
+
+<label class="fii">Enter Amount </label>
+<input type="number" class="oii " name="number"  placeholder="Enter Amount" />
+
+<br />
+
+<label class="fii">Enter Date </label>
+<input type="date" class=" hii" name="date"   />
+
+<br >
+<input type="submit" class="hii dii"  name="submit" placeholder="Update Submit" />
+
+
+
+</div>
+</form>
+</body>
+
+</html>
+
+<?php
+
+require_once('lb/functions.php');
+  $db = new class_dii();
+  global $res_category ;
+  global $res_edit_id ;
+  if(isset($_GET['edit_id']))
+  {
+        $res_edit_id  = $_GET['edit_id'];
+        $_SESSION['edit_id']  =  $res_edit_id ;
+  
+  }
+    $res_edit_id =  $_SESSION['edit_id'] ;
+
+
+if(isset($_POST['submit']))
+{
+        $va_category     =   $_POST['text'];
+
+
+        $db->update_user_account($va_category,$res_edit_id);
+
+}
+
+$users_data = array();
+$users_data = $db->get_user_data_from_id( $res_edit_id);
+
+if(!empty($users_data))
+{
+$res_id          = $users_data['id'];
+$res_category    = $users_data['category'];
+$res_date        = $users_data['date'];
+$res_time        = $users_data['time'];
+}
+?>   
+   <html>
+
+<head>
+ <style>
+.oii
+{
+padding: 30px;
+font-size: 50px;
+margin-right: 20px;
+}
+ .mi{
+         border: 2px solid black;
+         background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+         padding: 10px;
+        font-size: 30px;
+        margin-right: 50px;
+        margin-left: 550px;
+ }
+ .mii
+ {
+    border: 2px solid black;
+         background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+         padding: 10px;
+        font-size: 20px;
+        margin-right: 50px;
+        margin-left: 650px;
+        margin-top: 20px;
+ }
+.ki
+     {
+         
+    background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+           border:2px solid black;
+    padding: 5px;
+    font-size:15px;
+    
+     }
+ </style>
+</head>
+
+<body background="IMAGES\mi.jpg">
+<form action="edit-record5.php" method="POST">
+
+ <center><h1 class="oii">Category Master</h1></center>
+<input type="text" class="mi" name="text" value="<?php echo $res_category  ?>"  />
+<br />
+<input type="submit" class="mii" name="submit" placeholder="Submit" />
+
+</form>
+
+	
+</body>
+
+</html>
+<?php
+require_once('lb/functions.php');
+$db = new class_functions();	
+
+if(isset($_POST['submit']))
+{
+  $var_username =$_POST['username'];
+  $var_password =$_POST['password'];
+  $users_data = array();
+  $users_data =$db->validate();
+
+
+  if($users_data['full_name']==$var_username && $users_data['password']==$var_password )
+{
+  ?>
+ <form action="records.php">
+  <?php
+}
+else{
+  ?>
+<div class="alert alert-danger" role="alert">
+ Invalid Username or Password
+</div>
+  <?php
+}
+
+}
+
+
+
+
+?>
+<html>
+    <head>
+        <title>
+ Admin Login
+        </title>
+        <link rel="stylesheet" type="text/css" href="css\\bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css\\bootstrap-grid.css">
+        <link rel="stylesheet" type="text/css" href="css\\bootstrap-reboot.css">
+        <link rel="stylesheet" type="text/css" href="css\\bootstrap-utilities.css">
+        <link rel="icon" href="images\logo.png" type="png">
+        <script type="text/javascript" src="js\\bootstrap.js"> </script>
+        <script type="text/javascript" src="js\\bootstrap.bundle.js"> </script>
+        <link rel="stylesheet" href="css\style3.css">
+        
+    </head>
+    <style>
+         body {
+      margin-top: 0px;
+    }
+
+    .complogo {
+    height: 150px;
+    width: 195px;
+    margin-right: 700px;
+
+  }
+
+
+    .apper {
+      padding: 10px;
+      padding-right: 50px;
+      font-size: 15px;
+      color: white;
+    }
+
+    label {
+      color: white;
+    }
+
+    .searchbar {
+      margin-right: 30px;
+      border-radius: 15px;
+    }
+
+    .sb {
+      border-radius: 10px;
+     
+    }
+
+    .apper:hover {
+
+      border-radius: 10px;
+
+
+
+    }
+
+    label:hover {
+      color:black;
+    }
+
+    .admin-login
+    {margin:auto;
+        height:500px;
+        width:400px;
+        border:2px solid olivedrab;
+        border-radius: 8px;
+    }
+  .logo-position
+  {
+    margin-top: 40px;
+  }
+  .e-f-size
+  {margin-right: 20px;
+    width:65%;
+    float:right;
+    border:2px solid green;
+    margin-top: 0px;
+  }
+  .form-lable
+  {
+    margin-top: 9px;
+    margin-left:6px;
+    color:black;
+    font-size: 21px;
+    font-family: 'Times New Roman';
+   
+  }
+  .form-control
+  {
+    float:right;
+    width:60%;
+    margin-right: 50px;
+    margin-top: 20px;
+    border: 2px solid green;
+  }
+  .form-label
+  {margin-left:10px;
+    font-family: 'Times New Roman';
+    color:black;
+    font-size: 20;
+    margin-top: 20px;
+  }
+  .sub-btn
+  {
+    float:center;
+    margin-top: 50px;
+    margin-left: 110px;
+  }
+  .bg_logo
+{
+border:2px solid black;
+height:60px;
+width:200px;
+margin-left:100px;
+border-radius:15px;
+}
+.apper {
+    padding: 10px;
+    padding-right: 50px;
+    font-size: 15px;
+    color: white;
+    float:right !important;
+    border:1.5px solid goldenrod;
+    margin-right: 20px;
+    border-radius: 10px;
+  }
+  .apper:hover {
+    background: linear-gradient(to top, #ff66ff 0%, #9966ff 100%);
+color:black ;
+border-color: white;
+
+  }
+  
+  .nvc
+  {
+    background-color: white !important;
+  }
+  @media only screen and (max-width:800px)
+  {
+    .complogo {
+    height: 150px !important;
+    width: 195px !important;
+    margin-right:0px !important;
+
+  }
+  .apper {
+    padding: 10px;
+   height:58px;
+   width:100px;
+    font-size: 15px;
+    color: white;
+    text-align: justify;
+    margin-top: 10px;
+  }
+  .admin-login {
+      margin:auto;
+        height:400px;
+        width:300px;
+        border:2px solid olivedrab;
+        border-radius: 8px;
+    }
+    
+  }
+  .btn
+  {
+    border:2px solid black;
+    margin-right: 8px;
+    background-color: antiquewhite !important;
+    color:black;
+   
+  }
+  .btn:hover{
+    background-color: tomato !important;
+    color:black;
+  }
+    </style>
+
+<body background="images\ad-log.jpg" style="background-size: 100% 1000px; background-repeat:no-repeat;" style="background-size: 100% 1000px; background-repeat:no-repeat;">
+
+</div>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="background: linear-gradient(to right, #9900ff 0%, #ff99cc 100%) !important;">
+  <div class="container-fluid" style="background-color: rgb(33, 21, 21);">
+    <img src="images\logo.png" class="complogo">
+   
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon nvc"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+
+        <li class="nav-item">
+          <a class="nav-link active apper" style="color:white" aria-current="page" href="index.php">Home</a>
+        </li>
+        
+      
+
+        <li class="nav-item">
+          <a class="nav-link active apper" style="color:white" aria-current="page" href="login.php">Login</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link active apper" style="color:white" aria-current="page" href="contact_us.php">Contact us</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link active apper" style="color:white" aria-current="page" href="about_us.php">About us</a>
+        </li>
+
+      </ul>     
+    </div>
+  </div>
+</nav>
+
+
+
+<br>
+
+
+
+<div class="wrapper">
+<form  method="POST">
+  <center><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+  </svg></center>
+  <br>
+  <hr>
+  <h1>Hello Again!</h1>
+  <br>
+  <form>
+    <input type="text" name="username" placeholder="Ur Username here...">
+    <br>
+    <input type="password" name="password" placeholder="Ur Password here..">
+    
+ 
+<center>  <input type="submit" name="submit"class="btn">Login As Administrator</input></center>
+</form>
+</div>
+
+</body>
+</html>
+
+<html>
+    <head>
+        <title>
+home
+        </title>
+        <link rel="stylesheet" type="text/css" href="css\bootstrap.css">
+
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-grid.css">
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-reboot.css">
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-utilities.css">
+
+        <script type="text/javascript" src="js\bootstrap.js"></script>
+             <script type="text/javascript" src="js\bootstrap.bundle.js"></script>
+        <style>
+.complogo
+{
+    width:200px;
+    height:200px;
+
+}
+.pos
+{
+    margin-right:200px;
+}
+.apper
+{
+    font-size: 25px;
+    font-family: 'Times New Roman';
+    border:2px solid black;
+    margin-left:10px;
+    border-radius:15px;
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+}
+.bgcolor
+{
+  background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+
+}
+.hii
+{
+  font-size:30px;
+margin-top:30px;
+}
+.sii
+{
+margin-left:320px;
+width:700px;
+ height:300px;
+}
+.in
+{
+   font-size: 40;
+   margin-right: 100px; 
+   margin-bottom: 80px;
+}
+
+.eii
+{
+  font-size:40px;
+}
+.aii
+{
+  font-size:14px;
+  margin-left:180px;
+}
+.dii
+{
+  margin-left:180px;
+  margin-right:80px;
+  font-size:14px;
+}
+.xii
+{
+  margin-left:350px;
+}
+.lii
+{
+height:300px; 
+width:600px;
+ margin-left:400px;
+}
+@media only screen and (max-width: 800px)
+{
+
+  .complogo
+{
+  width:80px;
+    height:100px;
+}
+.pos
+{
+    margin-right:100px;
+}
+.apper
+{
+    font-size: 15px;
+    font-family: 'Times New Roman';
+    border:1px solid black;
+    margin-left:600px;
+    margin-right:300px;
+    border-radius:10px;
+    margin-bottom:0px !important;
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+}
+
+.bgcolor
+{
+  background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+    
+}
+.in
+{
+  margin-top:30px;
+  font-size: 30px;
+   margin-right: 10px; 
+}
+
+.hii
+{
+  font-size:35px;
+margin-top:30px;
+}
+.sii
+{
+margin-left:20px;
+margin-right:20px;
+width:350px;
+ height:200px;
+}
+.eii
+{
+  font-size:30px;
+}
+.aii
+{
+  font-size:15px;
+  margin-left:25px;
+  margin-right:25px;
+
+}
+.dii
+{
+font-size:10px;
+
+}
+.lii
+{
+height:200px;
+ width:300px; 
+ margin-left:20px;
+}
+.xii
+{
+  margin-left:20px;
+}
+}
+
+            </style>
+    </head>
+
+    <body>
+      
+
+
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid bgcolor">
+             <img src="IMAGES\imp.jpg" class="complogo pos">
+             <label class="in"  >Expense Manager</label>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    
+                    
+                  <li class="nav-item ">
+                    <a class="nav-link active apper jii" aria-current="page" href="Home1.php">Home</a>
+                 </li>
+                 <li class="nav-item">
+                    <a class="nav-link active apper jii" aria-current="page" href="Reg1.php">Registration</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active apper jii" aria-current="page" href="Login1.php">Login</a>
+                  </li>
+                 
+                  </li>
+                 
+                  <li class="nav-item">
+                    <a class="nav-link active apper jii" aria-current="page" href="Contact3.php">Contact Us</a>
+                  </li>
+                
+                 
+                  <li class="nav-item">
+                    
+                    <a class="nav-link active apper jii" aria-current="page" href="About1.php ">About Us</a>
+
+                 
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active apper jii" aria-current="page" href="Adminlogin.php">Admin</a>
+                  </li>
+                 
+                </ul>
+                
+              </div>
+            </div>
+          </nav>
+
+          <center><label class="eii">*Defining  Management And Its Purpose*</label></center><ul>
+    <hr />
+    
+    <li class="aii">So why is  management so important? For one, it helps to reduce stress and keep things organized. But more importantly, it gives you more time to spend with your family and enjoy your life.</li>
+ 
+  <li class="aii">  The purpose of management is to make life easier and less stressful for everyone involved.    </li>
+
+     <li class="aii"> This includes everything from keeping track of finances and bills to cleaning the house and preparing meals.</li>
+
+
+     
+    <li class="aii">Management is a simple term, but one that is very complex when you start looking at that it entails. It can get overwhelming just to think about all the things that it includes.</li>
+<ul>
+
+</div>
+   <img src="IMAGES\hii.jpg" class="sii" >
+
+          <center> <h1 class="hii">Save time on expense reports</h1></center>
+
+
+       <li class="dii">Managing your employees' daily expenses has never been easier. Whether it's travel expenses, office supplies, or any other employee expenditure, access all receipts and expense submissions from your Expenses dashboard and create, validate, or refuse them in just a click. No need to download a specialized software to maintain expense records- everything can be done directly through the app!</li>
+       
+       <img src="IMAGES\sii.jpg" class="sii">
+
+
+ <br />
+<br />
+ 
+<h4 class="xii" >The Best All-In-On</h4>
+  <h1 class="xii">Screen Recording and Video Editor</h1>
+  <h6 class="xii" >Camtasia makes it simple to record and create professional- looking videos on Windows and Mac.</h6>
+
+<video controls class="lii">
+  <source src="WhatsApp Video 2023-07-29 at 07.13.06.mp4">
+</video> 
+
+
+       
+      </body>
+
+</html>
+
+
+
+
+
+
+
+<?php
+
+require_once('lb/functions.php');
+  $db = new class_mi();
+
+
+  if(isset($_GET['logout']))
+  {
+    unset($_SESSION['Login_mon_no']);
+  }
+
+  if(isset($_POST['submit']))
+{
+
+  $va_Mobil_number     =   $_POST['number'];
+  $va_password         =   $_POST['password'];
+
+ $db_password = $db->get_user_password( $va_Mobil_number);
+
+  
+ if($db_password=="")
+ {
+     echo "This user is not registered with us . Check Mobile Number";
+ }
+ else
+ {
+     if($va_password ==$db_password)
+     {
+
+        //echo "login Success";
+        $_SESSION['Login_mon_no'] = $va_Mobil_number ;
+
+        header("location:dashbord.php");
+     }
+     else
+     {
+        echo "Incorrect password";
+     }
+ }
+}
+?>
+
+
+
+
+
+
+<html>
+    <head>
+        <title>
+Login Page
+        </title>
+        <link rel="stylesheet" type="text/css" href="css\bootstrap.css">
+
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-grid.css">
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-reboot.css">
+        <link rel="stylesheet" type="text/css" href="css\bootstrap-utilities.css">
+
+        <script type="text/javascript" src="js\bootstrap.js"></script>
+             <script type="text/javascript" src="js\bootstrap.bundle.js"></script>
+        <style>
+.complogo
+{
+    width:200px;
+    height:200px;
+
+}
+.pos
+{
+    margin-right:200px;
+}
+.apper
+{
+    font-size: 25px;
+    font-family: 'Times New Roman';
+    border:2px solid black;
+    margin-left:160px;
+    margin-right:250px;
+    margin-top:60px;
+    width:80px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.bgcolor
+{
+  background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+
+}
+.log-form
+{
+  border:2px solid black;
+  width:350px;
+  height:430px;
+  border-radius: 20px;
+  margin-left:500px !important;
+  margin-right:450px !important; 
+  margin-top:30px !important;
+  background: linear-gradient(to bottom, #ffff99 0%, #ffffff 100%);
+    font-size: 20px;
+     margin: 5px;
+
+}
+.fii
+{
+  padding: 40px;
+  font-size: 50px;
+  color:black;
+}
+.gii
+{
+  
+ margin-top: 30px; 
+ margin-left:30px;
+margin-right:32px !important;
+border-radius: 30px;
+font-size: 25px;
+background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+}
+
+.pii
+{
+  margin-left:140px;
+  margin-right:100px !important;
+  margin-top:40px;
+  font-size:20px;
+  background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+
+}
+
+.wii
+{  
+  margin-top:120px;
+ background="C:\wamp64\www\IMAGES\download 6.jpg" style="background-size: 100% 1000px; background-repeat:no-repeat;
+
+
+}
+.jii
+{
+  margin-top:30px;
+}
+.in
+{
+   font-size: 40;
+   margin-right: 100px; 
+   margin-bottom: 80px;
+}
+
+@media only screen and (max-width: 800px)
+{
+  .complogo
+{
+    width:200px;
+    height:200px;
+
+}
+.pos
+{
+    margin-right:200px;
+}
+.apper
+{
+    font-size: 25px;
+    font-family: 'Times New Roman';
+    border:2px solid black;
+    margin-left:160px;
+    margin-right:250px;
+    margin-top:60px;
+    width:80px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.bgcolor
+{
+  background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+
+}
+.log-form
+{
+  border:2px solid black;
+  width:200px;
+  height:400px;
+  border-radius: 20px;
+  margin-left:50px !important;
+  margin-right:60px !important; 
+  margin-top:40px !important;
+  background: linear-gradient(to bottom, #ffff99 0%, #ffffff 100%);
+    font-size: 15px;
+     margin: 5px;
+
+}
+.fii
+{
+  padding: 40px;
+  font-size: 50px;
+  color:black;
+}
+.gii
+{
+  
+ margin-top: 20px; 
+ margin-left:10px;
+margin-right:32px !important;
+border-radius: 10px;
+font-size: 15px;
+background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+}
+
+.pii
+{
+  margin-left:140px;
+  margin-right:100px !important;
+  margin-top:40px;
+  font-size:20px;
+  background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+
+}
+
+.wii
+{  
+  margin-top:120px;
+  margin-left:10px;
+ background="C:\wamp64\www\IMAGES\download 6.jpg" style="background-size: 100% 1000px; background-repeat:no-repeat;
+
+
+}
+.jii
+{
+  margin-top:30px;
+}
+.in
+{
+   font-size: 40;
+   margin-right: 100px; 
+   margin-bottom: 80px;
+}
+
+}
+
+
+
+            </style>
+    </head>
+
+    <body class="wii" background="IMAGES\download 6.jpg" style="background-size: 100% 1000px; background-repeat:no-repeat;" >
+
+          
+          
+<form action="Login1.php" method="POST">
+
+          <div class="log-form">
+     <center><label class="fii">Login</label></center> 
+  <input type="number"  class="gii" name="number" placeholder="Enter the Number" />
+  
+  <br />
+   
+  <input type="password" class="gii" name="password" placeholder="Enter the password" />
+  
+  <br />
+  
+   
+  <input type="submit" class="pii"  name="submit" placeholder="Sign in " />
+
+  <br />
+
+  <br />
+</form>
+
+      
+      
+<li class="nav-item ">
+                    <a class="nav-link active apper " aria-current="page" href="index.php">Home</a>
+                  </li>
+
+
+    </body>
+</html>
+
+<?php
+
+require_once('lb/functions.php');
+  $db = new class_mi();
+
+if(isset($_POST['submit']))
+{
+   $va_full_name 	      = 	$_POST['text'];
+   $va_date             =   $_POST['date'];
+   $va_Mobil_number     =   $_POST['number'];
+   $va_email_name       =   $_POST['email'];
+   $va_password         =   $_POST['password'];
+   $var_system_captcha	=	$_POST['system_captcha'];
+   $var_user_captcha	=	$_POST['user_captcha'];
+   
+   if($var_system_captcha==$var_user_captcha)
+   {
+
+
+    
+  $db->create_user_account($va_full_name,$va_date,$va_Mobil_number,$va_email_name,$va_password);
+ /* {
+    //Send Whatsapp Message
+    $whatsapp_message = "
+      💥💥💥💥💥💥💥💥 \n
+
+      *Expence Manger*
+
+      Dear $var_full_name,
+      Thank You For Joining With Us \n
+
+      \n Note:Automatic Software Message".
+      "\n💥💥💥💥💥💥💥💥";
+
+      $url =	"http://web.cloudwhatsapp.com/wapp/api/send?apikey=7a7bc6e92e1447d4ac545dac48eebee4&mobile=$var_mobile_number&msg=".urlencode($whatsapp_message);
+        echo $response = file_get_contents($url);
+        
+          //Send Message
+    $forwardURL = 'http://sms.bulksmsind.in/sendSMS?'.http_build_query(array(
+      'username' => "abc",
+      'sendername' => "DRMTCH",
+      'smstype' => "TRANS",
+      'numbers' => $contact_no,
+      'message' => $user_message,
+      'apikey' => "1b4a8d6a-5760-40c7-b7eb-e31119e19cad",
+    ));
+
+  }*/
+}
+
+else{
+  echo "Invalid Captcha Code.. Refill details";
+}
+}
+
+
+?>
+
+
+
+
+<html>
+
+<head>
+  
+<title>
+Registration Page
+        </title>
+
+<meta name="keywords" content="Expence Mangemnet,month mangement,house mangemnt,office mangement,money mangement,expence tarackers, "/>
+<meta name="description" content="it is month mangement it is so easy calculet of the money ,Retusreducing the lod mangement,your tressless injoy your life"/>
+<meta name="robots" content="index">
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+ 
+         <link rel="stylesheet" type="text/css" href="css\bootstrap.css">
+         <link rel="stylesheet" type="text/css" href="css\bootstrap-grid.css">
+         <link rel="stylesheet" type="text/css" href="css\bootstrap-reboot.css">
+         <link rel="stylesheet" type="text/css" href="css\bootstrap-utilities.css">
+
+        <script type="text/javascript" src="js\bootstrap.js"></script>
+             <script type="text/javascript" src="js\bootstrap.bundle.js"></script>
+ <style>
+.nii
+{
+  background:linear-gradient(to bottom, #33ccff 0%, #ff99cc 100%);
+  margin-right:60px;
+   margin-left:80px;
+   margin-top:5px;
+}
+
+ .tii
+ {
+    border:2px solid black;
+     margin-left:450px;
+    margin-right:500px;
+    font-size:30px;
+    background: linear-gradient(to bottom, #ccccff 0%, #ccffff 100%);
+
+     
+ }
+ .lii 
+ {
+  border:2px solid black ;
+
+ }
+ 
+ .kii
+ {
+     font-size: 30px;
+     margin: 90;
+     color: black
+ }
+.mii
+{
+   background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+   margin-right:50px;
+   margin-left:50px;
+   margin-top:5px;
+   border:2px solid black ;
+    padding: 10px;
+    font-size:25px;
+    
+    border-radius: 10px;
+    
+}
+.complogo
+{
+    width:200px;
+    height:200px;
+
+}
+.pos
+{
+    margin-right:200px;
+}
+.apper
+{
+    font-size: 25px;
+    font-family: 'Times New Roman';
+    border:2px solid black;
+    margin-left:600px;
+    margin-right:660px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.bgcolor
+{
+  background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+
+}
+
+.jii
+{    
+  background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+   margin-left:150px;
+  margin-right:100px;
+  margin-top:30px;
+}
+.bii
+{
+  margin-right:50px;
+   margin-left:50px;
+   background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+   margin-top:5px;
+   border:2px solid black ;
+    padding: 10px;
+    font-size:25px;
+    border-radius: 10px;
+    width:300px;
+    
+}
+.in
+{
+   font-size: 40;
+   margin-right: 100px; 
+   margin-bottom: 80px;
+}
+
+@media only screen and (max-width: 800px)
+{
+  .nii
+{
+  background:linear-gradient(to bottom, #33ccff 0%, #ff99cc 100%);
+  margin-right:15px;
+   margin-left:15px;
+   margin-top:5px;
+}
+
+ .tii
+ {
+    border:2px solid black;
+     margin-left:110px;
+    margin-right:10px;
+    font-size:50px;
+    width:180px;
+    background: linear-gradient(to bottom, #ccccff 0%, #ccffff 100%);
+   margin-top:80px;
+     
+ }
+ .lii 
+ {
+  border:2px solid black ;
+
+ }
+ 
+ .kii
+ {
+margin-left:30px !important;
+    margin-right:10px;
+         font-size: 10px;
+     margin: 90;
+     color: black;
+ }
+.mii
+{
+   background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+   margin-right:30px;
+   margin-left:10px;
+   margin-top:5px;
+   border:2px solid black ;
+    padding: 5px;
+    font-size:10px;
+    
+    border-radius: 10px;
+    
+}
+.complogo
+{
+    width:200px;
+    height:200px;
+
+}
+.pos
+{
+    margin-right:200px;
+}
+.apper
+{
+    font-size: 10px;
+    font-family: 'Times New Roman';
+    border:2px solid black;
+    margin-left:140px;
+    margin-right:160px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    padding:5px;
+    width:60px;
+}
+.apper:hover
+{
+    color:white !important;
+    background-color: black;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.bgcolor
+{
+  background: linear-gradient(to bottom, #3366ff 0%, #ff00ff 100%) !important;
+
+}
+
+.jii
+{    
+  background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+   margin-left:50px;
+  margin-right:100px;
+  margin-top:30px;
+  margin-bottom:30px;
+}
+.bii
+{
+  margin-right:10px;
+   margin-left:10px;
+   background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+   margin-top:2px;
+   border:2px solid black ;
+    padding: 3px;
+    font-size:12px;
+    border-radius: 10px;
+    width:125px;
+    
+}
+.in
+{
+   font-size: 40;
+   margin-right: 100px; 
+   margin-bottom: 80px;
+}
+ 
+}
+
+ </style>
+</head>
+
+<body class="nii" >
+
+
+
+    
+    
+<form action="Reg1.php" method="POST">
+
+
+ <div class="tii">
+ <lebel class="kii">Full_Name</label>
+<input type="text" class="mii" name="text" required placeholder="Enter First Name" />
+
+<br />
+
+<lebel class="kii">Brith Date</label>
+<input type="date" class="bii" name="date" required placeholder="Enter brith date" />
+
+<br />
+
+
+ <lebel class="kii">Mobile_number</label>
+<input type="number" class="mii" name="number" required placeholder="Enter The Number" />
+
+<br />
+
+ <lebel class="kii">  Email</label>
+<input type="email" class="mii" name="email" required placeholder="Enter The Email" />
+
+<br />
+
+
+ <lebel class="kii"> Password</label>
+<input type="password" class="mii" name="password" required  placeholder="Enter The Password" />
+
+<br />
+	  <?php
+			$random_value = rand(50000,99000)
+	  ?>
+     <lebel class="kii"> 	  Enter Captcha Code..</label>
+
+	  <input type="text" class="mii" name="system_captcha" value="<?php echo $random_value; ?>" />
+	  <input type="text" class="mii" name="user_captcha" placeholder="Enter Captcha Code" />
+	
+    <br />
+
+	
+	
+
+
+<input type="submit" class="jii" name="submit" />
+</div>
+</form>
+   
+<li class="nav-item ">
+                    <a class="nav-link active apper " aria-current="page" href="index.php">Home</a>
+                  </li>
+
+</body>
+</html>
+
+<?php
+ob_start();
+require_once('lb/functions.php');
+$db = new class_mi();
+       
+
+   
+   if(isset($_GET['delete_id']))
+   {
+        $del_id = $_GET['delete_id'];
+   
+        $db->delete_user_record($del_id);
+   }
+?>
+<html>
+
+<head>
+<link rel="stylesheet" type="text/css" href="css\bootstrap.css">
+
+<link rel="stylesheet" type="text/css" href="css\bootstrap-grid.css">
+<link rel="stylesheet" type="text/css" href="css\bootstrap-reboot.css">
+<link rel="stylesheet" type="text/css" href="css\bootstrap-utilities.css">
+
+<script type="text/javascript" src="js\bootstrap.js"></script>
+     <script type="text/javascript" src="js\bootstrap.bundle.js"></script>
+<style>
+
+ <style>
+ .thead
+ {
+ 
+      background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+
+
+ color: green;
+ font-size:20px;
+ padding:80px;
+ color: red;
+ 
+ }
+ .eii
+ {
+     font-size: 60px;
+     color:black;
+ }
+ .apper1
+{
+    font-size: 25px;
+    font-family: 'Times New Roman';
+    border:3px solid black;
+    margin-left:700px;
+    margin-right:630px;
+    margin-top:50px;
+    border-radius:250px;
+    padding:5px;
+}
+.apper1:hover
+{
+    color:white !important;
+    background-color: black;
+}
+ </style>
+</head>
+
+<body >
+<a class="nav-link active apper1 jii" aria-current="page" href="Admin.php" >Admin paget</a>
+
+
+ 	<center><h1 class="eii">*Registration Report*</h1></center>
+     	<a href="report.php?excel_export">Export </a>
+         
+
+          <h1>Users Report</h1>
+	<a href="report.php?excel_export">Excel Export</a>
+	
+	<a href="https://rzp.io/i/xF2dv8f">PAY NOW</a>
+	
+	<button id="rzp-button1">Pay</button>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "YOUR_KEY_ID", // Enter the Key ID generated from the Dashboard
+    "amount": "1000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "DREAM TECHNOLOGY",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": "order_IluGWxBm9U8zJ8", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+        alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature)
+    },
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+});
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
+
+
+    <table border="1" width="100%" cellspacing="1" cellpadding="10" >            
+		<thead class="thead">
+               <td>id</td>
+        <td>Full_Name</td>
+       <td>Brith Date</td>
+        <td>Mobile_number</td>
+       <td>Email</td>
+        <td>Password</td>
+        <th>date</th>
+        <th>time</th>
+        <th>Edit</th>   
+        <th>Delete</th>
+
+</thead >
+<tbody >
+     <?php
+          $users_data =array();
+          $users_data =$db->get_all_users_data();
+
+         // print_r($users_data);
+
+         if(!empty($users_data))
+         {
+          $counter = 0;
+
+          foreach($users_data as $record )
+          {
+               $res_id          = $users_data[$counter]['id'];
+               $res_full_name   = $users_data[$counter]['full_name'];
+               $res_brith_date  = $users_data[$counter]['brith_date'];
+               $res_mob_number = $users_data[$counter]['mob_number'];
+               $res_email       = $users_data[$counter]['email'];
+               $res_password    = $users_data[$counter]['password'];
+               $res_date        = $users_data[$counter]['date'];
+               $res_time        = $users_data[$counter]['time'];
+            ?>
+           <tr>
+                <td><?php echo  $counter + 1 ?></td>
+                <td><?php echo  $res_full_name ?></td>
+                <td><?php echo  $res_brith_date?></td>
+                <td><?php echo  $res_mob_number?></td>
+                <td><?php echo  $res_email  ?></td>
+                <td><?php echo  $res_password ?></td>
+                <td><?php echo  $res_date ?></td>
+                <td><?php echo  $res_time  ?></td>
+                <td>
+                <a href="edit-record1.php?edit_id=<?php echo $res_id; ?>">Edit</a>
+          </td>
+          <td>
+                       <a href="report.php?delete_id=<?php echo  $res_id; ?>" >Delete</a>
+
+          </td>
+          </tr>
+            <?php
+               $counter++;
+          }
+     }
+          else
+          {
+             echo "No data found  😟..!";
+          }
+         
+
+          if(isset($_GET['excel_export']))
+	{
+		$filename = "user_report".date('Ymd') . ".xls";			
+		header("Content-Type: application/vnd.ms-excel");
+		header("Content-Disposition: attachment; filename=\"$filename\"");	
+		$show_coloumn = false;
+		if(!empty($users_data)) {
+		  foreach($users_data as $record) {
+			if(!$show_coloumn) {
+			  // display field/column names in first row
+			  echo implode("\t", array_keys($record)) . "\n";
+			  $show_coloumn = true;
+			}
+			echo implode("\t", array_values($record)) . "\n";
+		  }
+		}
+		exit;  
+	}
+
+     ob_flush();
+     ?>
+
+
+</tbody>
+</body>
+
+</html>
+
+<?php
+require_once('lb/functions.php');
+$db = new class_tii();
+   
+
+
+   if(isset($_GET['delete_id']))
+{
+     $del_id = $_GET['delete_id'];
+
+     $db->delete_user_record($del_id);
+}
+
+?>
+
+<html>
+
+<head>
+ <style>
+ .thead
+ {
+ 
+      background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+
+
+ color: green;
+ font-size:20px;
+ padding:80px;
+ color: black;
+ 
+ }
+ .eii
+ {
+     font-size: 60px;
+     color:black;
+ }
+ .yii
+    {
+    font-size: 25px;
+    border:2px solid black;
+    margin-left:1060px;
+    margin-top:30px;
+    width:140px;
+    padding:10px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.aii
+{
+   
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    font-size:25px;
+    width:330px;
+    padding: 10px;
+    border-radius:15px;
+    border:2px solid black;
+    border-size:20px;
+
+
+}
+.cat
+{
+    margin-top:30px;
+    margin-left:30px;
+
+}
+.pii
+{
+    background: linear-gradient(to bottom, #00ff99 0%, #cc66ff 100%) !important;
+    font-size:20px;
+    width:330px;
+    padding: 5px;
+    border-radius:15px;
+    border:2px solid black;
+    margin-left:630px;
+    
+
+}
+.nii
+{
+       margin-top:150px;
+
+}
+.qii
+{
+     background: linear-gradient(to bottom, #99ccff 0%, #ff66ff 100%);
+}
+@media only screen and (max-width: 800px)
+{
+     .thead
+ {
+ 
+      background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+
+
+ color: green;
+ font-size:20px;
+ padding:80px;
+ color: black;
+ 
+ }
+ .eii
+ {
+     font-size: 60px;
+     color:black;
+ }
+ .yii
+    {
+    font-size: 15px;
+    border:2px solid black;
+    margin-left:400px;
+    margin-top:30px;
+    width:140px;
+    padding:10px;
+    border-radius:15px;
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+
+}
+.aii
+{
+   
+    background: linear-gradient(to bottom, #66ff66 0%, #00ffff 100%);
+    font-size:15px;
+    width:330px;
+    padding: 10px;
+    border-radius:15px;
+    border:2px solid black;
+    border-size:20px;
+
+
+}
+.cat
+{
+    margin-top:30px;
+    margin-left:30px;
+
+}
+.pii
+{
+    background: linear-gradient(to bottom, #00ff99 0%, #cc66ff 100%) !important;
+    font-size:10px;
+    width:330px;
+    padding: 5px;
+    border-radius:15px;
+    border:2px solid black;
+    margin-left:250px;
+    
+
+}
+.nii
+{
+       margin-top:150px;
+
+}
+.qii
+{
+     background: linear-gradient(to bottom, #99ccff 0%, #ff66ff 100%);
+}   
+}
+ </style>
+</head>
+
+<body background="C:\Website\IMAGES\images (6).jpg">
+
+<div class="cat" >
+     <a class="aii" href="category5.php">Category</a>
+     <a class="yii" href="addexpence2.php">Add Choise</a>
+     <a class="pii" href="dashbord.php">Log out</a>
+
+</div>
+<div     class="qii" >
+ 	<center><h1 class="eii">*Total Report*</h1></center>
+    <table border="1" width="100%" cellspacing="1" cellpadding="10" >            
+		<thead class="thead">
+        <td>Sr.no</td>
+       <td>Category</td>
+        <td>Title</td>
+       <td>Amount</td>
+        <td>Date</td>
+        <td>Date</td>
+        <td>Time</td>
+        <th>Edit</th>   
+        <th>Delete</th>
+</thead >
+
+
+<tbody >
+
+     <?php
+          $total=0;
+          $users_data =array();
+          $users_data =$db->get_all_users_data();
+$result=$db->get_total();
+         // print_r($users_data);
+
+         if(!empty($users_data))
+         {
+          $counter = 0;
+
+          foreach($users_data as $record )
+          {
+               $res_no                = $users_data[$counter]['no'];
+               $res_select_category   = $users_data[$counter]['select_category'];
+               $res_enter_title      = $users_data[$counter]['enter_title'];
+               $res_enter_amount       = $users_data[$counter]['enter_amount'];
+               $res_enter_date         = $users_data[$counter]['enter_date'];
+               $res_date              = $users_data[$counter]['date'];
+               $res_time               = $users_data[$counter]['time'];
+               $total                  = $total+ $res_enter_amount ;
+
+            ?>
+           <tr>
+                <td><?php echo  $counter + 1 ?></td>
+                <td><?php echo  $res_select_category?></td>
+                <td><?php echo  $res_enter_title  ?></td>
+                <td><?php echo  $res_enter_amount ?></td>
+                <td><?php echo  $res_enter_date ?></td>
+                <td><?php echo  $res_date ?></td>
+                <td><?php echo  $res_time  ?></td>
+                <td>
+                      <a href="edit-record2.php?edit_id=<?php echo $res_no; ?>">Edit</a>
+          </td>
+          <td>
+                       <a href="report2.php?delete_id=<?php echo  $res_no; ?>" >Delete</a>
+
+          </td>
+          </td><?php echo $result; ?>
+          <td>
+          
+        </tr>
+            <?php
+               $counter++;
+          
+          }
+          ?>
+          <tr>
+               <td colspan="3">
+                    Total
+               </td>
+               <td>
+                    <?php echo   $total;    ?>
+               </td>
+          </tr>
+          <?php 
+     
+          }
+          else
+          {
+             echo "No data found";
+          }
+         
+     ?>
+     
+     </div>
+</html>
+
+
+<?php
+require_once('lb/functions.php');
+$db = new class_dii();
+       
+
+   
+   if(isset($_GET['delete_id']))
+   {
+        $del_id = $_GET['delete_id'];
+   
+        $db->delete_user_record($del_id);
+   }
+?>
+
+<html>
+<head>
+<style>
+.thead
+ {
+  background: linear-gradient(to bottom, #6699ff 0%, #ff6699 100%);
+ color: green;
+ font-size:20px;
+ padding:80px;
+ color: red;
+ 
+ }
+.eii 
+{
+     font-size: 60px;
+     color:black;
+ }
+ .apper1
+{
+    font-size: 25px;
+    font-family: 'Times New Roman';
+    border:3px solid black;
+    margin-left:700px;
+    margin-right:600px;
+    margin-top:50px !important;
+    border-radius:250px;
+    padding:5px;
+}
+.apper1:hover
+{
+    color:white !important;
+    background-color: black;
+}
+ </style>
+</head>
+
+<body >
+
+<a class="nav-link active apper1 jii" aria-current="page" href="Admin.php" >Admin page</a>
+
+ 	<center><h1 class="eii">*Registration Report*</h1></center>
+    <table border="1" width="100%" cellspacing="1" cellpadding="10" >            
+		<thead class="thead">
+               <td>id</td>
+        <td>category</td>
+        <th>date</th>
+        <th>time</th>
+        <th>Edit</th>   
+        <th>Delete</th>
+
+</thead >
+<tbody >
+     <?php
+          $users_data =array();
+          $users_data =$db->get_all_users_data();
+
+         // print_r($users_data);
+
+         if(!empty($users_data))
+         {
+          $counter = 0;
+
+          foreach($users_data as $record )
+          {
+               $res_id          = $users_data[$counter]['id'];
+               $res_category    = $users_data[$counter]['category'];
+               $res_date        = $users_data[$counter]['date'];
+               $res_time        = $users_data[$counter]['time'];
+            ?>
+           <tr>
+                <td><?php echo  $counter + 1 ?></td>
+                <td><?php echo  $res_category ?></td>
+                <td><?php echo  $res_date ?></td>
+                <td><?php echo  $res_time  ?></td>
+                <td>
+                      <a href="edit-record5.php?edit_id=<?php echo $res_id; ?>" >Edit</a>
+          </td>
+          <td>
+                       <a href="report5.php?delete_id=<?php echo  $res_id; ?>" >Delete</a>
+
+          </td>
+          </tr>
+            <?php
+               $counter++;
+          }
+     } 
+          else
+          {
+             echo "No data found";
+          }
+         
+     ?>
+
+
+</tbody>
+</body>
+
+</html>
